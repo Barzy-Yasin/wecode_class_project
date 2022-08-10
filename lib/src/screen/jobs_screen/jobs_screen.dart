@@ -110,7 +110,7 @@ class _JobsScreenState extends State<JobsScreen> {
                     companyName: 'The Company',
                     companyJobPosition: 'Junior developer',
                     companyJobType: 'Full Time',
-                    companyJobSalary: 92000,
+                    companyJobSalary: 91000,
                     favIconBool: !ButtonValueChanger.favRecord,
                   );
                 },
