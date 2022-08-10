@@ -10,9 +10,6 @@ class JobsScreen extends StatefulWidget {
 class _JobsScreenState extends State<JobsScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  // bool favIconBool = false;
-  // static bool favIconBool = false;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,6 +37,7 @@ class _JobsScreenState extends State<JobsScreen> {
                       IconButton(
                         onPressed: () {
                           debugPrint('favorite icon clicked');
+                          hasNotificationFunction(); // #temporary
                           // TODO: open favorite screen
                         },
                         icon: const Icon(Icons.favorite, size: 30),
@@ -75,8 +73,9 @@ class _JobsScreenState extends State<JobsScreen> {
                       child: Form(
                         child: TextFormField(
                           controller: searchController,
+                          style: const TextStyle(fontSize: 20),
                           decoration:
-                              const InputDecoration(border: InputBorder.none),
+                              const InputDecoration(border: InputBorder.none, hintText: 'Search...'),
                         ),
                       ),
                     ),
@@ -84,7 +83,8 @@ class _JobsScreenState extends State<JobsScreen> {
                       flex: 1,
                       child: IconButton(
                         onPressed: () {
-                          debugPrint(searchController.text.toString());
+                          debugPrint(
+                              'searchController= ${searchController.text}'); // #temporary
                         },
                         icon: const Icon(Icons.close),
                       ),
@@ -103,13 +103,15 @@ class _JobsScreenState extends State<JobsScreen> {
                   thickness: 1,
                 ),
                 itemBuilder: (context, index) {
-                  // debugPrint('ValueChanger.favRecord= ${ValueChanger.favRecord}');
+                  // debugPrint(
+                  //     '1. from itembuilder ValueChanger.hasNotificationIcon= ${ValueChanger.hasNotification}');
                   return jobVacanciesContainer(
+                    theRecord: {index+1}.toString(),
                     companyName: 'The Company',
                     companyJobPosition: 'Junior developer',
                     companyJobType: 'Full Time',
                     companyJobSalary: 92000,
-                    favIconBool: ValueChanger.favRecord,
+                    favIconBool: !ValueChanger.favRecord,
                   );
                 },
               ),
@@ -120,6 +122,7 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
+// custome card Text() widget
   Widget cardText(
       {required String name,
       required double fontSize,
@@ -141,16 +144,18 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
+// this widget is returned by itemBuilder inside listview.seperated
   Widget jobVacanciesContainer({
+    required String theRecord,
     required String companyName,
     required String companyJobPosition,
     required String companyJobType,
     required int companyJobSalary,
     required bool favIconBool,
+    
   }) {
     IconData favIcon = Icons.favorite_outline;
     IconData favIconFill = Icons.favorite;
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       height: 100,
@@ -164,7 +169,7 @@ class _JobsScreenState extends State<JobsScreen> {
                   onPressed: () {
                     setState(() {
                       ValueChanger.favRecord = !ValueChanger.favRecord;
-                      // debugPrint(favIconBool.toString());
+                      debugPrint('favIcon in record: $theRecord clicked, favIconBool= $favIconBool');
                     });
                   },
                   icon: Icon(favIconBool ? favIconFill : favIcon)),
@@ -207,64 +212,40 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
+// this widget handle the notificationIconButton stateif it has notification
   Widget notificationIconButton() {
-    IconData notificationIcon = Icons.notifications_outlined;   // off
-    IconData hasNotificationIcon = Icons.notifications_active;  // on
+    IconData notificationIcon = Icons.notifications_outlined; // off
+    IconData hasNotificationIcon = Icons.notifications_active; // on
 
     return IconButton(
       onPressed: () {
-        if (ValueChanger.hasNotificaion) {
+        if (ValueChanger.hasNotification) {
           setState(() {
-            ValueChanger.hasNotificaion = false;
-            debugPrint(
-                'notifications icon clicked • ValueChanger.hasNotificaion= ${ValueChanger.hasNotificaion.toString()}');
+            ValueChanger.hasNotification = false;
           });
-          // TODO: open notification list here
         }
+        debugPrint('notifications icon clicked');
+        debugPrint('ValueChanger.hasNotification= ${ValueChanger.hasNotification.toString()}');
+        // TODO: open notification list here
       },
       icon: Icon(
-          ValueChanger.hasNotificaion ? hasNotificationIcon : notificationIcon,
+          ValueChanger.hasNotification ? hasNotificationIcon : notificationIcon,
           size: 30),
     );
   }
-}
 
-// the ValueChanger class is used to retrieve
-class ValueChanger {
-  static bool favRecord = true;
-  static bool hasNotificaion = true;
-}
-
-/*
-
-  Widget notificationIconButton() {
-    IconData notificationIcon = Icons.notifications_outlined;       // off
-    IconData hasNotificationIcon = Icons.notifications_active;      // on
-    IconData currentNotificationIcon = notificationIcon;            // off
-    // if (ValueChanger.hasNotificaion) {
-    //   setState(() {
-    //     currentNotificationIcon = Icons.notifications_active;
-    //   });
-    // }
-
-    if (ValueChanger.hasNotificaion) {
-      setState(() {
-        currentNotificationIcon = hasNotificationIcon;
-      });
-    }
-    return IconButton(
-      onPressed: () {
-        // TODO: open notification list here
-        if (currentNotificationIcon == hasNotificationIcon) {
-          setState(() {
-            currentNotificationIcon = notificationIcon;
-          debugPrint(
-              'notifications icon clicked • currentNotificationIcon= ${currentNotificationIcon.toString()}');
-          });
-        }
-      },
-      icon: Icon(currentNotificationIcon, size: 30),
-    );
+// this hasNotificationFunction function is used to change notification icon status
+  void hasNotificationFunction() {
+    setState(() {
+      ValueChanger.hasNotification = true;
+    });
+    debugPrint(
+        'hasNotificationFunction() executed •• ValueChanger.hasNotification= ${ValueChanger.hasNotification.toString()}');
   }
+}
 
-    */
+// the ValueChanger class is used to retrieve initial values, may swe get it from shared preferience in #futuretodo
+class ValueChanger {
+  static bool favRecord = !true;
+  static bool hasNotification = true;
+}
