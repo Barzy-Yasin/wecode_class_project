@@ -1,4 +1,4 @@
-import 'package:class_project/src/screen/jobs_screen.dart';
+import 'package:class_project/src/screen/jobs_screen/jobs_screen.dart';
 import 'package:flutter/material.dart';
 
 class RootApp extends StatelessWidget {
