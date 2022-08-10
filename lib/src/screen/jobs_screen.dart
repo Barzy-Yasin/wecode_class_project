@@ -11,7 +11,7 @@ class _JobsScreenState extends State<JobsScreen> {
   final TextEditingController searchController = TextEditingController();
 
   // bool favIconBool = false;
-    // static bool favIconBool = false;
+  // static bool favIconBool = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,7 @@ class _JobsScreenState extends State<JobsScreen> {
           children: [
             // #sections screen column > (header) container.
             Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               color: Colors.yellow,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,18 +39,13 @@ class _JobsScreenState extends State<JobsScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          debugPrint('hello');
+                          debugPrint('favorite icon clicked');
+                          // TODO: open favorite screen
                         },
-                        icon: const Icon(Icons.favorite_outline, size: 30),
+                        icon: const Icon(Icons.favorite, size: 30),
                       ),
                       // const SizedBox(width: 15),
-                      IconButton(
-                        onPressed: () {
-                          debugPrint('hello2');
-                        },
-                        icon: const Icon(Icons.notifications_outlined,
-                            size: 30),
-                      ),
+                      notificationIconButton()
                     ],
                   )
                 ],
@@ -109,12 +103,13 @@ class _JobsScreenState extends State<JobsScreen> {
                   thickness: 1,
                 ),
                 itemBuilder: (context, index) {
-                  return bodyContainer(
-                    companyName: 'Baralilo',
-                    companyJobPosition: 'Senior',
+                  // debugPrint('ValueChanger.favRecord= ${ValueChanger.favRecord}');
+                  return jobVacanciesContainer(
+                    companyName: 'The Company',
+                    companyJobPosition: 'Junior developer',
                     companyJobType: 'Full Time',
-                    companyJobSalary: 900200,
-                    favIconBoolInWidget: ValueChanger.theValue,
+                    companyJobSalary: 92000,
+                    favIconBool: ValueChanger.favRecord,
                   );
                 },
               ),
@@ -146,12 +141,12 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
-  Widget bodyContainer({
+  Widget jobVacanciesContainer({
     required String companyName,
     required String companyJobPosition,
     required String companyJobType,
     required int companyJobSalary,
-    required bool favIconBoolInWidget,
+    required bool favIconBool,
   }) {
     IconData favIcon = Icons.favorite_outline;
     IconData favIconFill = Icons.favorite;
@@ -168,13 +163,13 @@ class _JobsScreenState extends State<JobsScreen> {
               child: IconButton(
                   onPressed: () {
                     setState(() {
-                       ValueChanger.theValue = !ValueChanger.theValue;
-                      debugPrint(favIconBoolInWidget.toString());
+                      ValueChanger.favRecord = !ValueChanger.favRecord;
+                      // debugPrint(favIconBool.toString());
                     });
                   },
-                  icon: Icon(favIconBoolInWidget ? favIconFill : favIcon)),
+                  icon: Icon(favIconBool ? favIconFill : favIcon)),
             ),
-          ), 
+          ),
           // SizedBox(width: 20,),
           Expanded(
             child: Container(
@@ -211,8 +206,65 @@ class _JobsScreenState extends State<JobsScreen> {
       ),
     );
   }
+
+  Widget notificationIconButton() {
+    IconData notificationIcon = Icons.notifications_outlined;   // off
+    IconData hasNotificationIcon = Icons.notifications_active;  // on
+
+    return IconButton(
+      onPressed: () {
+        if (ValueChanger.hasNotificaion) {
+          setState(() {
+            ValueChanger.hasNotificaion = false;
+            debugPrint(
+                'notifications icon clicked • ValueChanger.hasNotificaion= ${ValueChanger.hasNotificaion.toString()}');
+          });
+          // TODO: open notification list here
+        }
+      },
+      icon: Icon(
+          ValueChanger.hasNotificaion ? hasNotificationIcon : notificationIcon,
+          size: 30),
+    );
+  }
 }
 
-class ValueChanger{
-  static bool theValue = true;
+// the ValueChanger class is used to retrieve
+class ValueChanger {
+  static bool favRecord = true;
+  static bool hasNotificaion = true;
 }
+
+/*
+
+  Widget notificationIconButton() {
+    IconData notificationIcon = Icons.notifications_outlined;       // off
+    IconData hasNotificationIcon = Icons.notifications_active;      // on
+    IconData currentNotificationIcon = notificationIcon;            // off
+    // if (ValueChanger.hasNotificaion) {
+    //   setState(() {
+    //     currentNotificationIcon = Icons.notifications_active;
+    //   });
+    // }
+
+    if (ValueChanger.hasNotificaion) {
+      setState(() {
+        currentNotificationIcon = hasNotificationIcon;
+      });
+    }
+    return IconButton(
+      onPressed: () {
+        // TODO: open notification list here
+        if (currentNotificationIcon == hasNotificationIcon) {
+          setState(() {
+            currentNotificationIcon = notificationIcon;
+          debugPrint(
+              'notifications icon clicked • currentNotificationIcon= ${currentNotificationIcon.toString()}');
+          });
+        }
+      },
+      icon: Icon(currentNotificationIcon, size: 30),
+    );
+  }
+
+    */
